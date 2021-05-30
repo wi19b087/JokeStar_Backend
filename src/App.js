@@ -1,13 +1,12 @@
 import React, { useRef, useState } from "react";
 import "./App.css";
-
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/analytics";
-
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import JokeList from "./components/JokeList";
 
 firebase.initializeApp({
   apiKey: "AIzaSyD7kKUO1m_4JAa_beAq6KHoeLzXDCdxYl4",
@@ -29,7 +28,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>⚛️🔥💬</h1>
+        <h1>⚛️🔥💬 Joke App</h1>
         <SignOut />
       </header>
 
@@ -68,7 +67,7 @@ function SignOut() {
 
 function ChatRoom() {
   const dummy = useRef();
-  const messagesRef = firestore.collection("messages");
+  const messagesRef = firestore.collection("jokeList");
   const query = messagesRef.orderBy("createdAt").limit(25);
 
   const [messages] = useCollectionData(query, { idField: "id" });
@@ -78,13 +77,15 @@ function ChatRoom() {
   const sendMessage = async (e) => {
     e.preventDefault();
 
-    const { uid, photoURL } = auth.currentUser;
+    const { uid, photoURL, displayName } = auth.currentUser;
+    console.log(auth);
 
     await messagesRef.add({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
       photoURL,
+      displayName,
     });
 
     setFormValue("");
@@ -94,9 +95,9 @@ function ChatRoom() {
   return (
     <>
       <main>
-        {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
-
+        {/* {messages &&
+          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)} */}
+        <JokeList jokes={messages} />
         <span ref={dummy}></span>
       </main>
 
@@ -115,23 +116,23 @@ function ChatRoom() {
   );
 }
 
-function ChatMessage(props) {
-  const { text, uid, photoURL } = props.message;
+// function ChatMessage(props) {
+//   const { text, uid, photoURL } = props.message;
 
-  const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
+//   const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
 
-  return (
-    <>
-      <div className={`message ${messageClass}`}>
-        <img
-          src={
-            photoURL || "https://api.adorable.io/avatars/23/abott@adorable.png"
-          }
-        />
-        <p>{text}</p>
-      </div>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <div className={`message ${messageClass}`}>
+//         <img
+//           src={
+//             photoURL || "https://api.adorable.io/avatars/23/abott@adorable.png"
+//           }
+//         />
+//         <p>{text}</p>
+//       </div>
+//     </>
+//   );
+// }
 
 export default App;
