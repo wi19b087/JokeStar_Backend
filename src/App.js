@@ -20,7 +20,7 @@ firebase.initializeApp({
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
-const analytics = firebase.analytics();
+//const analytics = firebase.analytics();
 
 function App() {
   const [user] = useAuthState(auth);
@@ -32,7 +32,7 @@ function App() {
         <SignOut />
       </header>
 
-      <section>{user ? <ChatRoom /> : <SignIn />}</section>
+      <section>{user ? <Categories /> : <SignIn />}</section>
     </div>
   );
 }
@@ -65,7 +65,7 @@ function SignOut() {
   );
 }
 
-function ChatRoom() {
+function Categories() {
   const dummy = useRef();
   const messagesRef = firestore.collection("jokeList");
   const query = messagesRef.orderBy("createdAt").limit(25);
