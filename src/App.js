@@ -37,6 +37,27 @@ const firestore = firebase.firestore();
 function App() {
   const [user] = useAuthState(auth);
 
+  // Fetch all jokes in Firestore
+  const jokesRef = firestore.collection("Jokes");
+  const query = jokesRef.orderBy("postedDate").limit(25);
+  const [allJokes] = useCollectionData(query, { idField: "id" });
+  // console.log({ allJokes });
+
+  const removeJokeById = async (jokeID) => {
+    // Delete a joke from firestore:
+    const jokesRef = firestore.collection("Jokes");
+    console.log("Try to delete joke with ID: " + jokeID);
+    await jokesRef
+      .doc(jokeID)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+  };
+
   return (
     <div className="App">
       <header>
@@ -44,7 +65,13 @@ function App() {
         <SignOut />
       </header>
 
-      <section>{user ? <Tabs /> : <SignIn />}</section>
+      <section>
+        {user ? (
+          <Tabs allJokes={allJokes} deleteJoke={removeJokeById} />
+        ) : (
+          <SignIn />
+        )}
+      </section>
     </div>
   );
 }
@@ -74,60 +101,27 @@ function SignOut() {
   );
 }
 
-function Dashboard() {
-  const dummy = useRef();
-  const jokesRef = firestore.collection("Jokes");
-  const query = jokesRef.orderBy("postedDate").limit(25);
-  const [jokes] = useCollectionData(query, { idField: "id" });
-  console.log({ jokes });
+// function getAllJokes() {
+//   // const dummy = useRef();
+//   const jokesRef = firestore.collection("Jokes");
+//   const query = jokesRef.orderBy("postedDate").limit(25);
+//   const [jokes] = useCollectionData(query, { idField: "id" });
+//   console.log({ jokes });
+//   return jokes;
+// }
 
-  const deleteJoke = async (jokeID) => {
-    //joke.preventDefault();
-    const { uid, photoURL, displayName } = auth.currentUser;
-    console.log(auth);
-
-    // Delete a joke from firestore:
-    console.log("Try to delete joke with ID: " + jokeID);
-    await jokesRef
-      .doc(jokeID)
-      .delete()
-      .then(() => {
-        console.log("Document successfully deleted!");
-      })
-      .catch((error) => {
-        console.error("Error removing document: ", error);
-      });
-
-    dummy.current.scrollIntoView({ behavior: "smooth" });
-  };
-
-  return (
-    <>
-      <main>
-        <JokeList jokes={jokes} onDelete={deleteJoke} />
-        <span ref={dummy}></span>
-      </main>
-    </>
-  );
-}
-
-// function ChatMessage(props) {
-//   const { text, uid, photoURL } = props.message;
-
-//   const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
-
-//   return (
-//     <>
-//       <div className={`message ${messageClass}`}>
-//         <img
-//           src={
-//             photoURL || "https://api.adorable.io/avatars/23/abott@adorable.png"
-//           }
-//         />
-//         <p>{text}</p>
-//       </div>
-//     </>
-//   );
+// async function removeJokeById(jokeID) {
+//   const jokesRef = firestore.collection("Jokes");
+//   console.log("Try to delete joke with ID: " + jokeID);
+//   await jokesRef
+//     .doc(jokeID)
+//     .delete()
+//     .then(() => {
+//       console.log("Document successfully deleted!");
+//     })
+//     .catch((error) => {
+//       console.error("Error removing document: ", error);
+//     });
 // }
 
 export default App;

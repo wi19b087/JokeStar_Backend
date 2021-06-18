@@ -42,9 +42,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TabsWrappedLabel() {
+export default function TabsWrappedLabel(props) {
+  const { allJokes, deleteJoke } = props;
   const classes = useStyles();
   const [value, setValue] = React.useState("one");
+
+  console.log({ allJokes });
 
   const handleTabChange = (event, newValue) => {
     setValue(newValue);
@@ -63,14 +66,14 @@ export default function TabsWrappedLabel() {
           <Tab value="three" label="Chuck Norris" {...a11yProps("three")} />
         </Tabs>
       </AppBar>
-      <TabPanel value={value} index="users">
+      <TabPanel value={value} index="one">
         All users
-        {/* <ShortJokesContainer /> */}
       </TabPanel>
-      <TabPanel value={value} index="jokes-short">
+      <TabPanel value={value} index="two">
         All short jokes
+        <ShortJokesContainer allJokes={allJokes} deleteJoke={deleteJoke} />
       </TabPanel>
-      <TabPanel value={value} index="jokes-chuck-norris">
+      <TabPanel value={value} index="three">
         All chuck norris jokes
       </TabPanel>
     </div>
