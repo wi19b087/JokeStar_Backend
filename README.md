@@ -1,7 +1,3 @@
-# React Firebase Super Chat
+# JokeStar Backend Webpage
 
-A simple fullstack chat demo with React and Firebase. 
-
-Watch on full [React Firebase Chat Tutorial](https://youtu.be/zQyrwxMPm88) on YouTube. 
-
-[Live demo](https://fireship-demos.web.app/)
+An admin page to view and delete all user or jokes
