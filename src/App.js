@@ -6,7 +6,7 @@ import "firebase/auth";
 import "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import JokeList from "./components/JokeList";
+
 import Tabs from "./components/Tabs";
 
 // const firebase_chat_app = {
@@ -41,7 +41,7 @@ function App() {
   const jokesRef = firestore.collection("Jokes");
   const query = jokesRef.orderBy("postedDate").limit(25);
   const [allJokes] = useCollectionData(query, { idField: "id" });
-  // console.log({ allJokes });
+  console.log({ allJokes });
 
   const removeJokeById = async (jokeID) => {
     // Delete a joke from firestore:
@@ -57,6 +57,9 @@ function App() {
         console.error("Error removing document: ", error);
       });
   };
+
+  // const userList = admin.auth().listUsers(10);
+  // console.log({ userList });
 
   return (
     <div className="App">

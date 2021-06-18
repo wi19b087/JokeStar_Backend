@@ -6,7 +6,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
-import ShortJokesContainer from "./ShortJokesContainer";
+import JokesContainer from "./JokesContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -53,6 +53,12 @@ export default function TabsWrappedLabel(props) {
     setValue(newValue);
   };
 
+  const shortJokes = allJokes?.filter((j) => j.category === "Short Jokes");
+  const longJokes = allJokes?.filter((j) => j.category === "Long Jokes");
+  const oneLine = allJokes?.filter((j) => j.category === "One Liner");
+  const dumbJokes = allJokes?.filter((j) => j.category === "Dumb Jokes");
+  const chuckNorris = allJokes?.filter((j) => j.category === "Chuck Norris");
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -63,18 +69,29 @@ export default function TabsWrappedLabel(props) {
         >
           <Tab value="one" label="Users" wrapped {...a11yProps("one")} />
           <Tab value="two" label="Short jokes" {...a11yProps("two")} />
-          <Tab value="three" label="Chuck Norris" {...a11yProps("three")} />
+          <Tab value="three" label="Long jokes" {...a11yProps("three")} />
+          <Tab value="four" label="One Liner" {...a11yProps("four")} />
+          <Tab value="five" label="Dumb jokes" {...a11yProps("five")} />
+          <Tab value="six" label="Chuck Norris" {...a11yProps("six")} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index="one">
         All users
       </TabPanel>
       <TabPanel value={value} index="two">
-        All short jokes
-        <ShortJokesContainer allJokes={allJokes} deleteJoke={deleteJoke} />
+        <JokesContainer jokes={shortJokes} deleteJoke={deleteJoke} />
       </TabPanel>
       <TabPanel value={value} index="three">
-        All chuck norris jokes
+        <JokesContainer jokes={longJokes} deleteJoke={deleteJoke} />
+      </TabPanel>
+      <TabPanel value={value} index="four">
+        <JokesContainer jokes={oneLine} deleteJoke={deleteJoke} />
+      </TabPanel>
+      <TabPanel value={value} index="five">
+        <JokesContainer jokes={dumbJokes} deleteJoke={deleteJoke} />
+      </TabPanel>
+      <TabPanel value={value} index="six">
+        <JokesContainer jokes={chuckNorris} deleteJoke={deleteJoke} />
       </TabPanel>
     </div>
   );
