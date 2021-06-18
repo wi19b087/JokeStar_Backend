@@ -8,15 +8,26 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import JokeList from "./components/JokeList";
 
-firebase.initializeApp({
-  apiKey: "AIzaSyD7kKUO1m_4JAa_beAq6KHoeLzXDCdxYl4",
-  authDomain: "fh-chat-demo.firebaseapp.com",
-  projectId: "fh-chat-demo",
-  storageBucket: "fh-chat-demo.appspot.com",
-  messagingSenderId: "605615695643",
-  appId: "1:605615695643:web:e82157dbed1b0dca1415be",
-  measurementId: "G-YTPGCZDH15",
-});
+// const firebase_chat_app = {
+//   apiKey: "AIzaSyD7kKUO1m_4JAa_beAq6KHoeLzXDCdxYl4",
+//   authDomain: "fh-chat-demo.firebaseapp.com",
+//   projectId: "fh-chat-demo",
+//   storageBucket: "fh-chat-demo.appspot.com",
+//   messagingSenderId: "605615695643",
+//   appId: "1:605615695643:web:e82157dbed1b0dca1415be",
+//   measurementId: "G-YTPGCZDH15",
+// };
+const firebase_joke_app = {
+  apiKey: "AIzaSyCc5fk3eUUtcYz2EbSYUXnl2EU5-tuQAZ0",
+  authDomain: "fh-witze-app.firebaseapp.com",
+  projectId: "fh-witze-app",
+  storageBucket: "fh-witze-app.appspot.com",
+  messagingSenderId: "532750168903",
+  appId: "1:532750168903:web:d0f622bface5c452bcd262",
+  measurementId: "G-9GW06NQYJ8",
+};
+
+firebase.initializeApp(firebase_joke_app);
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -32,7 +43,7 @@ function App() {
         <SignOut />
       </header>
 
-      <section>{user ? <Categories /> : <SignIn />}</section>
+      <section>{user ? <Dashboard /> : <SignIn />}</section>
     </div>
   );
 }
@@ -48,9 +59,6 @@ function SignIn() {
       <button className="sign-in" onClick={signInWithGoogle}>
         Sign in with Google
       </button>
-      <p>
-        Do not violate the community guidelines or you will be banned for life!
-      </p>
     </>
   );
 }
@@ -65,28 +73,33 @@ function SignOut() {
   );
 }
 
-function Categories() {
+function Dashboard() {
   const dummy = useRef();
-  const messagesRef = firestore.collection("jokeList");
-  const query = messagesRef.orderBy("createdAt").limit(25);
+  const jokesRef = firestore.collection("Jokes");
+  const query = jokesRef.orderBy("postedDate").limit(25);
 
-  const [messages] = useCollectionData(query, { idField: "id" });
+  const [jokes] = useCollectionData(query, { idField: "id" });
+  console.log({ jokes });
 
   const [formValue, setFormValue] = useState("");
 
-  const sendMessage = async (e) => {
-    e.preventDefault();
+  const deleteJoke = async (jokeID) => {
+    //joke.preventDefault();
 
     const { uid, photoURL, displayName } = auth.currentUser;
     console.log(auth);
 
-    await messagesRef.add({
-      text: formValue,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      uid,
-      photoURL,
-      displayName,
-    });
+    // Delete a joke from firestore:
+    console.log("Try to delete joke with ID: " + jokeID);
+    await jokesRef
+      .doc(jokeID)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
 
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
@@ -97,11 +110,11 @@ function Categories() {
       <main>
         {/* {messages &&
           messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)} */}
-        <JokeList jokes={messages} />
+        <JokeList jokes={jokes} onDelete={deleteJoke} />
         <span ref={dummy}></span>
       </main>
 
-      <form onSubmit={sendMessage}>
+      {/* <form onSubmit={sendMessage}>
         <input
           value={formValue}
           onChange={(e) => setFormValue(e.target.value)}
@@ -111,7 +124,7 @@ function Categories() {
         <button type="submit" disabled={!formValue}>
           🕊️
         </button>
-      </form>
+      </form> */}
     </>
   );
 }

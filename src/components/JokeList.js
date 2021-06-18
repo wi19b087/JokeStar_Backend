@@ -6,7 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
-const renderJokeCard = (joke) => {
+const renderJokeCard = (joke, onDelete) => {
   console.log({ joke });
   return (
     // <>
@@ -18,22 +18,28 @@ const renderJokeCard = (joke) => {
     // </>
     <Card variant="outlined">
       <CardContent>
-        <Typography variant="body2" component="p">
+        <Typography variant="body1" component="p">
           {joke.text}
         </Typography>
-        <Typography variant="h5" component="h2" color="textSecondary">
-          posted by {joke.displayName}
+        <Typography variant="body2" component="h2" color="textSecondary">
+          posted by {joke.author}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button
+          onClick={async () => await onDelete(joke.id)}
+          size="small"
+          style={{ color: "red" }}
+        >
+          Delete this joke from Firestore
+        </Button>
       </CardActions>
     </Card>
   );
 };
 
 const JokeList = (props) => {
-  const { jokes } = props;
+  const { jokes, onDelete } = props;
 
   //jokes:
   // createdAt 30. Mai 2021 um 15:08:05 UTC+2
@@ -42,7 +48,11 @@ const JokeList = (props) => {
   // text "whats up"
   // uid "sbu4vrfoSbheWtiKH1cxgALcTsA3"
 
-  return jokes ? <div>{jokes.map((j) => renderJokeCard(j))}</div> : <div />;
+  return jokes ? (
+    <div>{jokes.map((j) => renderJokeCard(j, onDelete))}</div>
+  ) : (
+    <div />
+  );
 };
 
 export default JokeList;
