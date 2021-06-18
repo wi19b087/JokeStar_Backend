@@ -7,6 +7,7 @@ import "firebase/analytics";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import JokeList from "./components/JokeList";
+import Tabs from "./components/Tabs";
 
 // const firebase_chat_app = {
 //   apiKey: "AIzaSyD7kKUO1m_4JAa_beAq6KHoeLzXDCdxYl4",
@@ -43,7 +44,7 @@ function App() {
         <SignOut />
       </header>
 
-      <section>{user ? <Dashboard /> : <SignIn />}</section>
+      <section>{user ? <Tabs /> : <SignIn />}</section>
     </div>
   );
 }
@@ -77,15 +78,11 @@ function Dashboard() {
   const dummy = useRef();
   const jokesRef = firestore.collection("Jokes");
   const query = jokesRef.orderBy("postedDate").limit(25);
-
   const [jokes] = useCollectionData(query, { idField: "id" });
   console.log({ jokes });
 
-  const [formValue, setFormValue] = useState("");
-
   const deleteJoke = async (jokeID) => {
     //joke.preventDefault();
-
     const { uid, photoURL, displayName } = auth.currentUser;
     console.log(auth);
 
@@ -101,30 +98,15 @@ function Dashboard() {
         console.error("Error removing document: ", error);
       });
 
-    setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
       <main>
-        {/* {messages &&
-          messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)} */}
         <JokeList jokes={jokes} onDelete={deleteJoke} />
         <span ref={dummy}></span>
       </main>
-
-      {/* <form onSubmit={sendMessage}>
-        <input
-          value={formValue}
-          onChange={(e) => setFormValue(e.target.value)}
-          placeholder="say something nice"
-        />
-
-        <button type="submit" disabled={!formValue}>
-          🕊️
-        </button>
-      </form> */}
     </>
   );
 }
