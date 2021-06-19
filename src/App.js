@@ -58,9 +58,6 @@ function App() {
       });
   };
 
-  // const userList = admin.auth().listUsers(10);
-  // console.log({ userList });
-
   return (
     <div className="App">
       <header>

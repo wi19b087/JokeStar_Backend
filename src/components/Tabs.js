@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 
 import JokesContainer from "./JokesContainer";
+import UsersContainer from "./UsersContainer";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -76,7 +77,7 @@ export default function TabsWrappedLabel(props) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index="one">
-        All users
+        <UsersContainer allJokes={allJokes} />
       </TabPanel>
       <TabPanel value={value} index="two">
         <JokesContainer jokes={shortJokes} deleteJoke={deleteJoke} />
