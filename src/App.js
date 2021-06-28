@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 import Tabs from "./components/Tabs";
+import JokerIcon from "./joker-icon.png";
 
 // const firebase_chat_app = {
 //   apiKey: "AIzaSyD7kKUO1m_4JAa_beAq6KHoeLzXDCdxYl4",
@@ -30,6 +31,19 @@ const firebase_joke_app = {
   measurementId: "G-9GW06NQYJ8",
 };
 
+const styles = {
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fields: {
+    margin: "20px",
+    width: "300px",
+  },
+};
+
 firebase.initializeApp(firebase_joke_app);
 
 const auth = firebase.auth();
@@ -42,6 +56,7 @@ function App() {
 
   // Fetch all jokes in Firestore
   const jokesRef = firestore.collection("Jokes");
+  // ToDO: Add pagination
   const query = jokesRef.orderBy("postedDate").limit(25);
   const [allJokes] = useCollectionData(query, { idField: "id" });
   console.log({ allJokes });
@@ -64,8 +79,19 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>JokeStar Backend</h1>
-        <SignOut />
+        <div style={styles.container}>
+          <h1>JokeStar Backend</h1>
+          {!auth.currentUser ? (
+            <div style={styles.container}>
+              <img src={JokerIcon} alt="Logo" />{" "}
+              <div>
+                Icons by
+                <a href="https://icons8.com/"> icons8</a>
+              </div>
+            </div>
+          ) : null}
+          <SignOut />
+        </div>
       </header>
 
       <section>
@@ -80,6 +106,8 @@ function App() {
 }
 
 const emailSignIn = (email, password) => {
+  console.log({ email });
+  console.log({ password });
   firebase
     .auth()
     .signInWithEmailAndPassword(email, password)
@@ -100,21 +128,7 @@ const emailSignIn = (email, password) => {
 function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    fields: {
-      margin: "20px",
-      width: "300px",
-    },
-  };
-  // Admin data:
-  // admin@jokeastarbackend.at
-  // JokeStar_Admin2021
+
   return (
     <div style={styles.container}>
       <TextField

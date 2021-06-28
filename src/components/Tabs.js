@@ -77,7 +77,7 @@ export default function TabsWrappedLabel(props) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index="one">
-        <UsersContainer allJokes={allJokes} />
+        <UsersContainer allJokes={allJokes} deleteJoke={deleteJoke} />
       </TabPanel>
       <TabPanel value={value} index="two">
         <JokesContainer jokes={shortJokes} deleteJoke={deleteJoke} />
