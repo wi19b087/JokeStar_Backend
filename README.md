@@ -7,7 +7,7 @@ It allows to to view and delete all user or jokes.
 
 To run this setup, you need to install NodeJS and npm package manager.
 
-To compile and start the application, run:
+To run the application, run:
 
 ```
 npm install
