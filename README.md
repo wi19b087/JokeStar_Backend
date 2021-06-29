@@ -25,6 +25,6 @@ To deploy the application to Google Firebase, run:
 firebase deploy --only hosting
 ```
 
-## Contributers
+## Contributors
 
 wi19b087@technikum-wien.at
