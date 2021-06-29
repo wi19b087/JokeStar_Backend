@@ -1,7 +1,7 @@
 # JokeStar Backend Webpage
 
 This is the offical backend for the [JokeStar Android App](https://github.com/wi19b087/JokeStar).
-It allows to to view and delete all user or jokes.
+It allows to view and delete all user or jokes.
 
 ## Setup
 
